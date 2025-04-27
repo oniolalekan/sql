@@ -54,7 +54,47 @@ The store wants to keep customer addresses. Propose two architectures for the CU
 **HINT:** search type 1 vs type 2 slowly changing dimensions. 
 
 ```
-Your answer...
+Type 1 Slowly Changing Dimension (SCD) = Overwrite old data (no history kept)
+Type 2 Slowly Changing Dimension (SCD)= Retain history by adding new records (track changes)
+
+Option 1: Overwrite Model (Type 1 SCD)
+Customer_Address (overwrite approach):
+Field	                  Description
+CustomerID (PK/FK)	      Link to the Customer
+Street	                  Current street address
+City	                  Current city
+State	                  Current state/province
+ZipCode	                  Current postal code
+Country	                  Current country
+
+Behavior:
+When a customer's address changes, update the existing row. No record of previous addresses.
+Simple, fast, clean. No history of old addresses.
+
+
+
+Option 2: Retain Changes Model (Type 2 SCD)
+Customer_Address (history tracking approach):
+Field	                     Description
+CustomerAddressID (PK)	     Unique address record
+CustomerID (FK)	             Link to the Customer
+Street	                     Street address
+City	                     City
+State	                     State/province
+ZipCode	                     Postal code
+Country	                     Country
+StartDate	                 When this address became active
+EndDate	                     When this address became inactive (NULL if current)
+IsCurrent	                 Boolean (TRUE if active address)
+
+Behavior:
+When a customer's address changes, insert a new row. Keep the old address with an EndDate and mark it IsCurrent = FALSE.
+Full address history available. Slightly more complex queries (need to find current address).
+
+
+
+
+
 ```
 
 ***
